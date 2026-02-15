@@ -1,0 +1,6 @@
+20/04/2025 02:39:08 - Cannot create a DbSet for 'TCliente' because this type is not included in the model for the context. -  - NoEncontrado - 
+20/04/2025 02:39:37 - Cannot create a DbSet for 'TCliente' because this type is not included in the model for the context. -  - NoEncontrado - 
+20/04/2025 02:39:41 - Cannot create a DbSet for 'TCliente' because this type is not included in the model for the context. -  - NoEncontrado - 
+20/04/2025 02:44:50 - Cannot create a DbSet for 'TCliente' because this type is not included in the model for the context. -  - NoEncontrado - 
+20/04/2025 02:44:59 - Cannot create a DbSet for 'TCliente' because this type is not included in the model for the context. -  - NoEncontrado - 
+20/04/2025 16:37:57 - Cannot create a DbSet for 'TRol' because this type is not included in the model for the context. -  - NoEncontrado - 

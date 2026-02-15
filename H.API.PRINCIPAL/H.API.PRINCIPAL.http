@@ -1,0 +1,6 @@
+@H.API.PRINCIPAL_HostAddress = http://localhost:5205
+
+GET {{H.API.PRINCIPAL_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
