@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace H.DataAccess.Models
 {
-    public partial class TRol
+    public partial class TTipoUsuario
     {
         /// <summary>
         /// Identificador de registro.
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// Nombre del rol.
+        /// Identificador de usuario.
         /// </summary>
-        public string Nombre { get; set; } = null!;
+        public string Nombre { get; set; }
         /// <summary>
         /// Estado del registro.
         /// </summary>

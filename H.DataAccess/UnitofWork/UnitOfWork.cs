@@ -31,6 +31,8 @@ namespace H.DataAccess.UnitofWork
         private IClienteRepository _ClienteRepository;
         private IRolRepository _RolRepository;
         private IPersonaRepository _PersonaRepository;
+        private IUsuarioRepository _UsuarioRepository;
+        private IUsuarioRolRepository _UsuarioRolRepository;
 
         IProductoRepository IUnitOfWork.ProductoRepository
         {
@@ -65,6 +67,22 @@ namespace H.DataAccess.UnitofWork
             get
             {
                 return _PersonaRepository ?? new PersonaRepository(_context, _connectionFactory);
+            }
+        }
+
+        IUsuarioRepository IUnitOfWork.UsuarioRepository
+        {
+            get
+            {
+                return _UsuarioRepository ?? new UsuarioRepository(_context, _connectionFactory);
+            }   
+        }
+
+        IUsuarioRolRepository IUnitOfWork.UsuarioRolRepository
+        {
+            get
+            {
+                return _UsuarioRolRepository ?? new UsuarioRolRepository(_context, _connectionFactory);
             }
         }
 

@@ -11,6 +11,8 @@ namespace H.DataAccess.Enums
         NoEncontrado,
         NoInsertado,
         NoActualizado,
-        NoEliminado
+        NoEliminado,
+        ErrorGeneral,
+        ErrorAutenticacion
     }
 }

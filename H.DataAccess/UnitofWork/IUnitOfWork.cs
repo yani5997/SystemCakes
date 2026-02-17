@@ -11,6 +11,8 @@ namespace H.DataAccess.UnitofWork
         IClienteRepository ClienteRepository { get; }
         IRolRepository RolRepository { get; }
         IPersonaRepository PersonaRepository { get; }
+        IUsuarioRepository UsuarioRepository { get; }
+        IUsuarioRolRepository UsuarioRolRepository { get; }
 
         void Commit();
         void Rollback();

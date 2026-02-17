@@ -6,48 +6,28 @@ using System.Threading.Tasks;
 
 namespace H.DataAccess.Models
 {
-    public partial class TPersona
+    public partial class TUsuario
     {
         /// <summary>
         /// Identificador de registro.
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// Identificador del usuario.
+        /// Identificador del tipo de usuario.
         /// </summary>
-        public int IdUsuario { get; set; }
+        public int IdTipoUsuario { get; set; }
         /// <summary>
-        /// Nombres de la persona.
+        /// Username.
         /// </summary>
-        public string Nombres { get; set; }
+        public string Username { get; set; }
         /// <summary>
-        /// Apellido paterno del usuario.
+        /// Password hash de usuario.
         /// </summary>
-        public string ApellidoPaterno { get; set; }
+        public string PasswordHash { get; set; }
         /// <summary>
-        /// Apellido materno del usuario.
+        /// Password salt de usuario.
         /// </summary>
-        public string ApellidoMaterno { get; set; }
-        /// <summary>
-        /// Tipo de documento del usuario.
-        /// </summary>
-        public string TipoDocumento { get; set; }
-        /// <summary>
-        /// Numero de documento del usuario.
-        /// </summary>
-        public string? NumeroDocumento { get; set; }
-        /// <summary>
-        /// Razon social del usuario.
-        /// </summary>
-        public string? RazonSocial { get; set; }
-        /// <summary>
-        /// Telefono del usuario.
-        /// </summary>
-        public string? Telefono { get; set; }
-        /// <summary>
-        /// Direccion del usuario.
-        /// </summary>
-        public string? Direccion { get; set; }
+        public string PasswordSalt { get; set; }
         /// <summary>
         /// Estado del registro.
         /// </summary>

@@ -19,12 +19,15 @@ public partial class sistemContext : DbContext
     public virtual DbSet<TCliente> TCliente { get; set; }
     public virtual DbSet<TRol> TRol { get; set; }
     public virtual DbSet<TPersona> TPersona { get; set; }
+    public virtual DbSet<TUsuario> TUsuario { get; set; }
+    public virtual DbSet<TUsuarioRol> TUsuarioRol { get; set; }
+    public virtual DbSet<TTipoUsuario> TTipoUsuario { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
         modelBuilder.Entity<TProducto>(entity =>
         {
-            entity.ToTable("T_Producto");
+            entity.ToTable("TProducto");
 
             entity.Property(e => e.Id).HasComment("Identificador de registro");
 
@@ -75,7 +78,7 @@ public partial class sistemContext : DbContext
 
         modelBuilder.Entity<TCategoria>(entity =>
         {
-            entity.ToTable("T_Categoria");
+            entity.ToTable("TCategoria");
 
             entity.Property(e => e.Id).HasComment("Identificador de registro");
 
@@ -112,7 +115,7 @@ public partial class sistemContext : DbContext
 
         modelBuilder.Entity<TCliente>(entity =>
         {
-            entity.ToTable("T_Cliente");
+            entity.ToTable("TCliente");
 
             entity.Property(e => e.Id).HasComment("Identificador de registro");
 
@@ -164,7 +167,7 @@ public partial class sistemContext : DbContext
 
         modelBuilder.Entity<TRol>(entity =>
         {
-            entity.ToTable("T_Rol");
+            entity.ToTable("TRol");
 
             entity.Property(e => e.Id).HasComment("Identificador de registro");
 
@@ -196,17 +199,17 @@ public partial class sistemContext : DbContext
 
         modelBuilder.Entity<TPersona>(entity =>
         {
-            entity.ToTable("T_Persona");
+            entity.ToTable("TPersona");
 
             entity.Property(e => e.Id).HasComment("Identificador de registro");
-            entity.Property(e => e.IdRol).HasComment("Identificador de registro");
+            entity.Property(e => e.IdUsuario).HasComment("Identificador de usuario");
 
             entity.Property(e => e.Nombres)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasComment("");
 
-            entity.Property(e => e.Apellidos)
+            entity.Property(e => e.ApellidoMaterno)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasComment("");
@@ -229,6 +232,107 @@ public partial class sistemContext : DbContext
             entity.Property(e => e.UsuarioModificacion)
                 .HasMaxLength(50)
                 .IsUnicode(false)
+                .HasComment("Usuario de modificación del registro");
+        });
+
+        modelBuilder.Entity<TUsuario>(entity =>
+        {
+            entity.ToTable("TUsuario");
+            entity.Property(e => e.Id).HasComment("Identificador de registro");
+            entity.Property(e => e.IdTipoUsuario).HasComment("Tipo de usuario");
+            entity.Property(e => e.Username)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasComment("Nombre de usuario");
+            entity.Property(e => e.PasswordHash)
+                .HasMaxLength(255)
+                .HasComment("Hash de contraseña");
+            entity.Property(e => e.PasswordSalt)
+                .HasMaxLength(255)
+                .HasComment("Salt de contraseña");
+            entity.Property(e => e.Estado).HasComment("Estado del registro");
+            entity.Property(e => e.FechaCreacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de creación del registro");
+            entity.Property(e => e.FechaModificacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de modificación del registro");
+            entity.Property(e => e.UsuarioCreacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de creación del registro");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de modificación del registro");
+        });
+
+        modelBuilder.Entity<TUsuarioRol>(entity =>
+        {
+            entity.ToTable("TUsuarioRol");
+            entity.Property(e => e.Id).HasComment("Identificador de registro");
+            entity.Property(e => e.IdUsuario).HasComment("Id de usuario");
+            entity.Property(e => e.IdRol).HasComment("Id de rol");
+            entity.Property(e => e.Estado).HasComment("Estado del registro");
+            entity.Property(e => e.FechaCreacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de creación del registro");
+            entity.Property(e => e.FechaModificacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de modificación del registro");
+            entity.Property(e => e.UsuarioCreacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de creación del registro");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de modificación del registro");
+        });
+
+        modelBuilder.Entity<TTipoUsuario>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("TTipoUsuario");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Estado).HasComment("Estado del registro");
+            entity.Property(e => e.FechaCreacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de creación del registro");
+            entity.Property(e => e.FechaModificacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de modificación del registro");
+            entity.Property(e => e.UsuarioCreacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de creación del registro");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de modificación del registro");
+        });
+
+        modelBuilder.Entity<TPersona>(entity =>
+        {
+            entity.ToTable("TPersona");
+            entity.Property(e => e.Id).HasComment("Identificador de registro");
+            entity.Property(e => e.IdUsuario).HasComment("Identificador de usuario");
+            entity.Property(e => e.TipoDocumento)
+                .HasMaxLength(50);
+            entity.Property(e => e.NumeroDocumento)
+                .HasMaxLength(50);
+            entity.Property(e => e.RazonSocial)
+                .HasMaxLength(255);
+            entity.Property(e => e.ApellidoPaterno)
+                .HasMaxLength(255);
+            entity.Property(e => e.Estado).HasComment("Estado del registro");
+            entity.Property(e => e.FechaCreacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de creación del registro");
+            entity.Property(e => e.FechaModificacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de modificación del registro");
+            entity.Property(e => e.UsuarioCreacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de creación del registro");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(100)
                 .HasComment("Usuario de modificación del registro");
         });
 

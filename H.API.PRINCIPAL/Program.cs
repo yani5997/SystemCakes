@@ -1,55 +1,172 @@
 ﻿using H.DataAccess;
 using H.DataAccess.Infrastructure;
+using H.DataAccess.Repositorios;
 using H.DataAccess.UnitofWork;
-using Microsoft.AspNetCore.Connections;
+using H.Services;
 using Microsoft.EntityFrameworkCore;
-
-using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ============================================
+// CONEXIÓN SQL SERVER
+// ============================================
+builder.Services.AddDbContext<sistemContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// ============================================
+// CONNECTION FACTORY (DAPPER)
+// ============================================
+builder.Services.AddScoped<H.DataAccess.Infrastructure.IConnectionFactory>(
+    provider => new ConnectionFactory(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
 
-// Registro de servicios
+// ============================================
+// UNIT OF WORK
+// ============================================
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// ============================================
+// REPOSITORIOS - ESTO FALTABA
+// ============================================
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
+// ============================================
+// SERVICIOS - ESTO FALTABA
+// ============================================
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// ============================================
+// CONTROLLERS
+// ============================================
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Configuración de CORS
+// ============================================
+// JWT AUTHENTICATION
+// ============================================
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new Exception("JWT Key no configurada en appsettings.json");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey)),
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+// ============================================
+// CORS
+// ============================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("UI-FrontEnd", policy =>
     {
         policy.WithOrigins("http://localhost:4200")
               .AllowAnyHeader()
-        .AllowAnyMethod();
+              .AllowAnyMethod();
     });
 });
 
-// Registrar servicios
-builder.Services.AddScoped<H.DataAccess.Infrastructure.IConnectionFactory>(
-    provider => new ConnectionFactory(
-        builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+// ============================================
+// SWAGGER CON JWT
+// ============================================
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "H.API.PRINCIPAL",
+        Version = "v1",
+        Description = "API Sistema de Ventas de Tortas"
+    });
 
-builder.Services.AddDbContext<sistemContext>(
-    opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization. Ingresa: Bearer {tu_token}",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+// ============================================
+// BUILD APP
+// ============================================
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ============================================
+// VERIFICAR CONEXIÓN A SQL SERVER
+// ============================================
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<sistemContext>();
+        var canConnect = await context.Database.CanConnectAsync();
+        if (canConnect)
+            Console.WriteLine("✅ Conexión a SQL Server exitosa.");
+        else
+            Console.WriteLine("❌ No se pudo conectar a SQL Server.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error al conectar a SQL Server: {ex.Message}");
+    }
+}
+
+// ============================================
+// PIPELINE
+// ============================================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "H.API.PRINCIPAL v1");
+    });
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("UI-FrontEnd");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
