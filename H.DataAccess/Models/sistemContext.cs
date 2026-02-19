@@ -366,5 +366,51 @@ public partial class sistemContext : DbContext
                 .HasComment("Usuario de modificación del registro");
         });
 
+        modelBuilder.Entity<TInsumo>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("TInsumo");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.UnidadMedida).HasComment("Unidad de medida");
+            entity.Property(e => e.StockActual).HasComment("Stock actual");
+            entity.Property(e => e.StockMinimo).HasComment("Stock minimo");
+            entity.Property(e => e.CostoUnitario).HasComment("Costo unitario");
+            entity.Property(e => e.Estado).HasComment("Estado del registro");
+            entity.Property(e => e.FechaCreacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de creación del registro");
+            entity.Property(e => e.FechaModificacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de modificación del registro");
+            entity.Property(e => e.UsuarioCreacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de creación del registro");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de modificación del registro");
+        });
+
+        modelBuilder.Entity<TCompra>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("TCompra");
+            entity.Property(e => e.FechaCompra).HasComment("Fech de la compra");
+            entity.Property(e => e.Total).HasComment("Total de la compra");
+            entity.Property(e => e.Estado).HasComment("Estado del registro");
+            entity.Property(e => e.FechaCreacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de creación del registro");
+            entity.Property(e => e.FechaModificacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de modificación del registro");
+            entity.Property(e => e.UsuarioCreacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de creación del registro");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(100)
+                .HasComment("Usuario de modificación del registro");
+        });
     }
 }

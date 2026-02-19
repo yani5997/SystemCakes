@@ -16,6 +16,7 @@ namespace H.DataAccess.UnitofWork
         ITortaRepository TortaRepository { get; }
         ITipoDocumentoRepository TipoDocumentoRepository { get; }
         IInsumoRepository InsumoRepository { get; }
+        ICompraRepository CompraRepository { get; }
 
         void Commit();
         void Rollback();
