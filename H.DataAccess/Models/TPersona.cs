@@ -17,6 +17,18 @@ namespace H.DataAccess.Models
         /// </summary>
         public int IdUsuario { get; set; }
         /// <summary>
+        /// Identificador del tipo de documento.
+        /// </summary>
+        public int IdTipoDocumento { get; set; }
+        /// <summary>
+        /// Numero de documento del usuario.
+        /// </summary>
+        public string NumeroDocumento { get; set; }
+        /// <summary>   
+        /// Razon social de la persona.
+        /// </summary>
+        public string RazonSocial { get; set; }
+        /// <summary>   
         /// Nombres de la persona.
         /// </summary>
         public string Nombres { get; set; }
@@ -28,18 +40,6 @@ namespace H.DataAccess.Models
         /// Apellido materno del usuario.
         /// </summary>
         public string ApellidoMaterno { get; set; }
-        /// <summary>
-        /// Tipo de documento del usuario.
-        /// </summary>
-        public string TipoDocumento { get; set; }
-        /// <summary>
-        /// Numero de documento del usuario.
-        /// </summary>
-        public string? NumeroDocumento { get; set; }
-        /// <summary>
-        /// Razon social del usuario.
-        /// </summary>
-        public string? RazonSocial { get; set; }
         /// <summary>
         /// Telefono del usuario.
         /// </summary>
