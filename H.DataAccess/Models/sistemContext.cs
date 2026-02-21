@@ -22,6 +22,8 @@ public partial class sistemContext : DbContext
     public virtual DbSet<TUsuario> TUsuario { get; set; }
     public virtual DbSet<TUsuarioRol> TUsuarioRol { get; set; }
     public virtual DbSet<TTipoUsuario> TTipoUsuario { get; set; }
+    public virtual DbSet<TCompra> TCompra { get; set; }
+    public virtual DbSet<TCompraDetalle> TCompraDetalle { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
@@ -394,23 +396,69 @@ public partial class sistemContext : DbContext
 
         modelBuilder.Entity<TCompra>(entity =>
         {
-            entity.HasKey(e => e.Id);
             entity.ToTable("TCompra");
-            entity.Property(e => e.FechaCompra).HasComment("Fech de la compra");
-            entity.Property(e => e.Total).HasComment("Total de la compra");
+            entity.Property(e => e.Id).HasComment("Identificador de registro");
+            entity.Property(e => e.FechaCompra)
+                .HasColumnType("datetime")
+                .HasComment("Fecha realizo compra");
+            entity.Property(e => e.Total)
+                .HasPrecision(18, 2)
+                .HasComment("Total de venta");
             entity.Property(e => e.Estado).HasComment("Estado del registro");
+            entity.Property(e => e.UsuarioCreacion)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasComment("Usuario de creación del registro");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasComment("Usuario de modificación del registro");
             entity.Property(e => e.FechaCreacion)
                 .HasColumnType("datetime")
                 .HasComment("Fecha de creación del registro");
             entity.Property(e => e.FechaModificacion)
                 .HasColumnType("datetime")
                 .HasComment("Fecha de modificación del registro");
+        });
+
+        modelBuilder.Entity<TCompraDetalle>(entity =>
+        {
+            entity.ToTable("TCompraDetalle");
+            entity.Property(e => e.Id).HasComment("Identificador de registro");
+            entity.Property(e => e.IdCompra).HasComment("Identificador de la compra realizada");
+            entity.Property(e => e.IdInsumo).HasComment("Identificador del insumo");
+            entity.Property(e => e.Cantidad)
+                .HasPrecision(18, 2)
+                .HasComment("Cantidad de insumos comprados");
+            entity.Property(e => e.CostoUnitario)
+                .HasPrecision(18, 2)
+                .HasComment("Costo unitario de los insumos adquiridos");
+            entity.Property(e => e.Subtotal)
+                .HasPrecision(18, 2)
+                .HasComment("Subtotal de la compra");
+            entity.Property(e => e.Estado).HasComment("Estado del registro");
             entity.Property(e => e.UsuarioCreacion)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
+                .IsUnicode(false)
                 .HasComment("Usuario de creación del registro");
             entity.Property(e => e.UsuarioModificacion)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
+                .IsUnicode(false)
                 .HasComment("Usuario de modificación del registro");
+            entity.Property(e => e.FechaCreacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de creación del registro");
+            entity.Property(e => e.FechaModificacion)
+                .HasColumnType("datetime")
+                .HasComment("Fecha de modificación del registro");
+
+            entity.HasOne<TCompra>()
+                .WithMany()
+                .HasForeignKey(e => e.IdCompra);
+
+            entity.HasOne<TInsumo>()
+                .WithMany()
+                .HasForeignKey(e => e.IdInsumo);
         });
     }
 }

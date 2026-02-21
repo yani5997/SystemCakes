@@ -37,6 +37,7 @@ namespace H.DataAccess.UnitofWork
         private ITipoDocumentoRepository _TipoDocumentoRepository;
         private IInsumoRepository _InsumoRepository;
         private ICompraRepository _CompraRepository;
+        private ICompraDetalleRepository _CompraDetalleRepository;
 
         IProductoRepository IUnitOfWork.ProductoRepository
         {
@@ -122,12 +123,20 @@ namespace H.DataAccess.UnitofWork
             }
         }
 
+        ICompraDetalleRepository IUnitOfWork.CompraDetalleRepository
+        {
+            get
+            {
+                return _CompraDetalleRepository ?? new CompraDetalleRepository(_context, _connectionFactory);
+            }
+        }
+
         public void Commit()
         {
             try
             {
                 _context.SaveChanges();
-                _context.Dispose();
+                //_context.Dispose();
             }
             catch (Exception ex)
             {

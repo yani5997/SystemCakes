@@ -20,7 +20,7 @@ namespace H.DataAccess.Models
         /// <summary>
         /// Total de venta.
         /// </summary>
-        public decimal Total { get; set; }
+        public decimal? Total { get; set; }
         /// <summary>
         /// Estado del registro.
         /// </summary>
