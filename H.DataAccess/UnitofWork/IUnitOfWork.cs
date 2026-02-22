@@ -19,6 +19,7 @@ namespace H.DataAccess.UnitofWork
         ICompraRepository CompraRepository { get; }
         ICompraDetalleRepository CompraDetalleRepository { get; }
         IRecetaTortaRepository RecetaTortaRepository { get; }
+        IProduccionRepository ProduccionRepository { get; }
 
         void Commit();
         void Rollback();
