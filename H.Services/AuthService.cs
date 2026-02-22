@@ -4,6 +4,7 @@ using H.DataAccess.Enums;
 using H.DataAccess.Helpers;
 using H.DataAccess.Log;
 using H.DataAccess.Repositorios;
+using H.DataAccess.UnitofWork;
 using H.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,11 +20,13 @@ namespace H.Services
     {
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
+        private IUnitOfWork _unitOfWork;
 
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration)
+        public AuthService(IAuthRepository authRepository, IConfiguration configuration, IUnitOfWork unitOfWork)
         {
             _authRepository = authRepository;
             _configuration = configuration;
+            _unitOfWork = unitOfWork; 
         }
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO request)
@@ -58,7 +61,7 @@ namespace H.Services
                     : "Cliente";
 
                 // 6. Obtener datos de persona
-                var persona = await _authRepository.ObtenerPersonaPorIdUsuario(usuario.Id);
+                var persona = _unitOfWork.PersonaRepository.GetBy(p => p.IdUsuario == usuario.Id).FirstOrDefault();
 
                 // 7. Generar token
                 var token = GenerarToken(usuario, roles);
@@ -253,10 +256,10 @@ namespace H.Services
                     throw new Exception("Usuario que registra no encontrado");
                 }
 
-                if (usuarioRegistra.IdTipoUsuario != 1)
+                /*if (usuarioRegistra.IdTipoUsuario != 1)
                 {
                     throw new Exception("Solo los administradores pueden registrar otros administradores");
-                }
+                }*/
 
                 SecurityHelper.CreatePasswordHash(request.Password, out string passwordHash, out string passwordSalt);
 

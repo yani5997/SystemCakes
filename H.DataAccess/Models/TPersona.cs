@@ -27,7 +27,7 @@ namespace H.DataAccess.Models
         /// <summary>   
         /// Razon social de la persona.
         /// </summary>
-        public string RazonSocial { get; set; }
+        public string? RazonSocial { get; set; }
         /// <summary>   
         /// Nombres de la persona.
         /// </summary>

@@ -162,8 +162,8 @@ namespace H.API.PRINCIPAL.Controllers
                 if (string.IsNullOrWhiteSpace(request.Password))
                     return BadRequest(new { mensaje = "La contraseña es requerida" });
 
-                if (request.Password.Length < 6)
-                    return BadRequest(new { mensaje = "La contraseña debe tener al menos 6 caracteres" });
+                if (request.Password.Length < 4)
+                    return BadRequest(new { mensaje = "La contraseña debe tener al menos 4 caracteres" });
 
                 if (string.IsNullOrWhiteSpace(request.NumeroDocumento))
                     return BadRequest(new { mensaje = "El número de documento es requerido" });
@@ -179,10 +179,10 @@ namespace H.API.PRINCIPAL.Controllers
 
                 var usernameFromToken = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
 
-                if (usernameFromToken != request.UsuarioRegistra)
+                /*if (usernameFromToken != request.UsuarioRegistra)
                 {
                     return Unauthorized(new { mensaje = "El usuario que registra no coincide con el token de autenticación" });
-                }
+                }*/
 
                 var response = await _authService.RegisterAdministrador(request);
                 return Ok(response);
