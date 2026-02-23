@@ -251,11 +251,7 @@ namespace H.Services
                 }
 
                 var usuarioRegistra = await _authRepository.GetUsuarioByUsername(request.UsuarioRegistra);
-                if (usuarioRegistra == null)
-                {
-                    throw new Exception("Usuario que registra no encontrado");
-                }
-
+               
                 /*if (usuarioRegistra.IdTipoUsuario != 1)
                 {
                     throw new Exception("Solo los administradores pueden registrar otros administradores");
